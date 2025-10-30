@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>Price Action Trader — Equity (Auto‑Data)</title>
-<meta name="theme-color" content="#0e1420">
+<meta name="theme-color" content="#0e1420" />
 <style>
 :root{
   --bg:#0b0f14; --fg:#e7eefb; --muted:#94a3b8; --accent:#6366f1;
@@ -18,7 +18,7 @@ header h1{margin:0;font-size:18px;line-height:1.2}
 header .sub{color:var(--muted);font-size:12px;margin-top:2px}
 nav{display:flex;gap:8px;overflow:auto;padding-top:10px}
 nav::-webkit-scrollbar{display:none}
-nav button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:700;flex:0 0 auto}
+nav button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:700;flex:0 0 auto;cursor:pointer}
 nav button.active{background:var(--accent);color:#fff;border-color:transparent}
 main{padding:12px 12px 40px}
 section{display:none}
@@ -119,7 +119,7 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     </div>
   </section>
 
-  <!-- DATA (NEW) -->
+  <!-- DATA (auto fetch) -->
   <section id="data">
     <div class="card">
       <h2 style="margin-top:0">Market Data (Auto Fetch)</h2>
@@ -141,7 +141,7 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
         </div>
         <div>
           <label>Symbol</label>
-          <input id="d-symbol" placeholder="e.g., RELIANCE, TCS, HDFCBANK">
+          <input id="d-symbol" placeholder="e.g., RELIANCE, TCS, HDFCBANK" />
         </div>
         <div>
           <label>Interval</label>
@@ -163,28 +163,29 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
         </div>
         <div>
           <label>Alpha Vantage API Key (optional)</label>
-          <input id="d-avkey" placeholder="Store your key here">
+          <input id="d-avkey" placeholder="Store your key here" />
         </div>
       </div>
       <div class="flex" style="margin-top:10px">
         <button id="btn-fetch" class="btn btn-primary" onclick="fetchAndAnalyze()">Fetch & Analyze</button>
+        <button class="btn btn-outline" onclick="testProviders()">Test Providers</button>
         <div id="fetch-state" class="flex small" style="gap:6px"></div>
         <div class="right flex">
-          <label class="switch"><input id="d-autoref" type="checkbox"><span class="slider"></span></label>
+          <label class="switch"><input id="d-autoref" type="checkbox" /><span class="slider"></span></label>
           <span class="small">Auto refresh</span>
-          <input id="d-autoref-min" type="number" class="small" style="width:90px" value="5">
+          <input id="d-autoref-min" type="number" class="small" style="width:90px" value="5" />
           <span class="small">min</span>
         </div>
       </div>
       <div class="notice small" style="margin-top:8px">
-        <b>Tip:</b> For NSE tickers on Yahoo, append <b>.NS</b> (e.g., <code class="inline">RELIANCE.NS</code>); for BSE tickers, use <b>.BO</b>. When you type a bare symbol, the app auto‑adds the suffix based on the Exchange field. Alpha Vantage requires your API key and supports <code class="inline">.NS</code>/<code class="inline">.BO</code> suffixes.
+        <b>Tip:</b> For NSE tickers on Yahoo, append <b>.NS</b> (e.g., <code class="inline">RELIANCE.NS</code>); for BSE tickers, use <b>.BO</b>. Typing a bare symbol auto‑adds the suffix based on the Exchange field.
       </div>
     </div>
 
     <div class="card">
       <h3 style="margin-top:0">Watchlist</h3>
       <div class="row row-2">
-        <div><input id="w-add" placeholder="Symbol (without suffix)"></div>
+        <div><input id="w-add" placeholder="Symbol (without suffix)" /></div>
         <div class="flex">
           <button class="btn btn-outline" onclick="addWatch()">Add</button>
           <button class="btn btn-outline" onclick="clearWatch()">Clear</button>
@@ -205,12 +206,12 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
       <h2 style="margin-top:0">Core Strategy: Trend Breakout + Retest (Equity)</h2>
       <ol>
         <li><b>Market Filter</b>: Trade in the direction of the <b>Daily</b> trend (HH/HL uptrend, LH/LL downtrend).</li>
-        <li><b>Setup</b>: On the <b>1H or 15M</b> chart, price consolidates below a clear resistance (supply) or above support (demand).</li>
+        <li><b>Setup</b>: On the <b>1H or 15M</b> chart, price consolidates below a clear resistance or above support.</li>
         <li><b>Trigger</b>: A strong <b>breakout candle</b> closes beyond the level. Prefer volume &gt; 1.5× 20‑bar average.</li>
-        <li><b>Entry</b>: On a <b>retest</b> of the breakout level, wait for a bullish/bearish confirmation candle and enter.</li>
+        <li><b>Entry</b>: On a <b>retest</b> of the breakout level, wait for a confirmation candle and enter.</li>
         <li><b>Stop‑loss</b>: Beyond invalidation (last swing low/high) or 1× ATR(14), whichever is wider.</li>
         <li><b>Targets</b>: First target at 2R; trail remainder behind swing lows/highs or ATR multiple.</li>
-        <li><b>Risk</b>: Risk ≤ <b>1% of capital</b> per trade. Max 3 open positions.</li>
+        <li><b>Risk</b>: Risk ≤ <b>1% of capital</b> per trade.</li>
       </ol>
     </div>
   </section>
@@ -221,8 +222,8 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
       <h2 style="margin-top:0">New Equity Trade</h2>
       <div class="row row-2">
         <div>
-          <label>Symbol (e.g., RELIANCE, TCS)</label>
-          <input id="t-symbol" placeholder="Symbol">
+          <label>Symbol</label>
+          <input id="t-symbol" placeholder="e.g., RELIANCE, TCS" />
         </div>
         <div>
           <label>Direction</label>
@@ -230,23 +231,23 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
         </div>
         <div>
           <label>Entry Price</label>
-          <input id="t-entry" type="number" step="0.01" placeholder="e.g., 2510.50">
+          <input id="t-entry" type="number" step="0.01" placeholder="2510.50" />
         </div>
         <div>
           <label>Stop-loss</label>
-          <input id="t-stop" type="number" step="0.01" placeholder="e.g., 2480.00">
+          <input id="t-stop" type="number" step="0.01" placeholder="2480.00" />
         </div>
         <div>
           <label>Target</label>
-          <input id="t-target" type="number" step="0.01" placeholder="Optional">
+          <input id="t-target" type="number" step="0.01" placeholder="Optional" />
         </div>
         <div>
           <label>Quantity (auto if blank)</label>
-          <input id="t-qty" type="number" step="1" placeholder="Leave empty to auto-calc">
+          <input id="t-qty" type="number" step="1" placeholder="Leave empty to auto-calc" />
         </div>
         <div class="row" style="grid-column:1 / -1">
           <label>Notes</label>
-          <textarea id="t-notes" placeholder="Why this trade? Breakout level, pattern, checklist items..."></textarea>
+          <textarea id="t-notes" placeholder="Why this trade? Level, pattern, checklist…"></textarea>
         </div>
       </div>
       <div class="flex" style="margin-top:10px">
@@ -266,18 +267,18 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     </div>
   </section>
 
-  <!-- SCANNER -->
+  <!-- ANALYZER -->
   <section id="scanner">
     <div class="card">
       <h2 style="margin-top:0">Analyzer</h2>
-      <p class="small">When you fetch data from <b>Data</b> tab, it will automatically flow here. You can still paste CSV for ad‑hoc tests if you like.</p>
+      <p class="small">When you fetch data from <b>Data</b>, it flows here. You can still paste CSV if you like.</p>
       <textarea id="csv-input" placeholder="Date,Open,High,Low,Close,Volume
 2025-07-01,2540,2562,2531,2555,12345678
 2025-07-02,2556,2575,2548,2570,11876543"></textarea>
       <div class="flex" style="margin-top:10px">
         <button class="btn btn-outline" onclick="analyzeCSV()">Analyze Pasted CSV</button>
         <button class="btn btn-outline" onclick="clearCSV()">Clear</button>
-        <div class="right"><small class="muted">Analysis uses 20‑bar breakout & ATR(14).</small></div>
+        <div class="right"><small class="muted">20‑bar breakout, ATR(14), volume expansion.</small></div>
       </div>
     </div>
 
@@ -287,22 +288,22 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
         <div id="meta-sym" class="right small muted"></div>
       </div>
       <div id="signals"></div>
-      <hr>
+      <hr />
       <canvas id="chart"></canvas>
     </div>
   </section>
 
-  <!-- POSITION SIZING & SETTINGS -->
+  <!-- POSITION / SETTINGS -->
   <section id="position">
     <div class="card">
       <h2 style="margin-top:0">Account & Risk</h2>
       <div class="row row-2">
-        <div><label>Trading Capital (₹)</label><input id="s-capital" type="number" step="0.01"></div>
-        <div><label>Risk per Trade (%)</label><input id="s-riskpct" type="number" step="0.1"></div>
-        <div><label>Brokerage + Taxes (%)</label><input id="s-fees" type="number" step="0.01"></div>
-        <div><label>Slippage (%)</label><input id="s-slip" type="number" step="0.01"></div>
-        <div><label>Currency Symbol</label><input id="s-curr" placeholder="₹"></div>
-        <div><label>Max Concurrent Positions</label><input id="s-maxopen" type="number" step="1"></div>
+        <div><label>Trading Capital (₹)</label><input id="s-capital" type="number" step="0.01" /></div>
+        <div><label>Risk per Trade (%)</label><input id="s-riskpct" type="number" step="0.1" /></div>
+        <div><label>Brokerage + Taxes (%)</label><input id="s-fees" type="number" step="0.01" /></div>
+        <div><label>Slippage (%)</label><input id="s-slip" type="number" step="0.01" /></div>
+        <div><label>Currency Symbol</label><input id="s-curr" placeholder="₹" /></div>
+        <div><label>Max Concurrent Positions</label><input id="s-maxopen" type="number" step="1" /></div>
       </div>
       <div class="flex" style="margin-top:10px">
         <button class="btn btn-primary" onclick="saveSettings()">Save</button>
@@ -323,7 +324,7 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
       <div class="flex" style="margin-top:8px">
         <button class="btn btn-primary" onclick="exportData()">Export JSON</button>
         <label class="btn btn-outline" for="import-file">Import JSON</label>
-        <input id="import-file" type="file" accept="application/json" style="display:none">
+        <input id="import-file" type="file" accept="application/json" style="display:none" />
         <button class="btn btn-danger right" onclick="resetAll()">Wipe All Data</button>
       </div>
     </div>
@@ -333,19 +334,21 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
   <section id="help">
     <div class="card">
       <h2 style="margin-top:0">How to Use</h2>
-      <div class="help-step"><b>1) Data</b> — Pick provider (AUTO recommended), type symbol (e.g., <code class="inline">RELIANCE</code> + NSE), choose interval, press <b>Fetch & Analyze</b>.</div>
-      <div class="help-step"><b>2) Analyze</b> — Check Trend, Breakouts, ATR(14), Volume expansion, candlesticks.</div>
-      <div class="help-step"><b>3) Position Size</b> — Compute quantity from entry/stop with risk ≤ 1%.</div>
-      <div class="help-step"><b>4) Journal</b> — Record entries and exits; review KPIs weekly.</div>
-      <div class="notice"><span class="warning">Disclaimer:</span> Data use is subject to each provider’s Terms. Trading involves substantial risk. This tool is educational only.</div>
+      <div class="help-step"><b>1) Data</b> — Pick provider (AUTO recommended), set exchange + symbol (e.g., <code class="inline">RELIANCE</code>), choose interval, press <b>Fetch & Analyze</b>.</div>
+      <div class="help-step"><b>2) Analyze</b> — Trend, 20‑bar breakouts, ATR(14), volume expansion, candlesticks.</div>
+      <div class="help-step"><b>3) Position Size</b> — Compute quantity with risk ≤ 1%.</div>
+      <div class="help-step"><b>4) Journal</b> — Record entries/exits; review KPIs weekly.</div>
+      <div class="notice"><span class="warning">Disclaimer:</span> Trading involves substantial risk. Data use is subject to each provider’s Terms. This tool is educational only.</div>
     </div>
-    <footer>v1.2 • Equity + Auto‑Data • Built for GitHub Pages • © You</footer>
+    <footer>v1.3 • Equity + Auto‑Data • Built for GitHub Pages • © You</footer>
   </section>
 </main>
 
 <script>
 (function(){
-  const STORAGE_KEY = 'pa_trader_equity_auto_v12';
+  const STORAGE_KEY = 'pa_trader_equity_auto_v13';
+
+  // ---------- Default state ----------
   const DEFAULTS = {
     capital: 100000,
     riskPct: 1.0,
@@ -366,55 +369,40 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
       {id:'size', text:'Position size ≤ 1% risk', checked:false},
       {id:'news', text:'No major event in next 24h', checked:false}
     ],
-    // Data settings
     data: {
-      provider: 'AUTO', // AUTO | YF | AV
-      exch: 'NS', // NS | BO
-      interval: '1d', // 1d | 60m | 15m
-      range: '3mo', // YF: 3mo/6mo/1y ; AV: compact/full
+      provider: 'AUTO',   // AUTO | YF | AV
+      exch: 'NS',         // NS | BO
+      interval: '1d',     // 1d | 60m | 15m
+      range: '3mo',       // YF: 3mo/6mo/1y ; AV: compact/full
       symbol: 'RELIANCE',
       avKey: '',
       autoref: false,
       autorefMin: 5,
       watch: [],
-      cache: {} // key -> {ts, data}
+      cache: {}
     }
   };
 
-  // -------- Storage --------
+  // ---------- State, storage, helpers ----------
   let state = load();
+  let activeTabId = 'dashboard'; // preserve current tab across renders
+  function deepMerge(a,b){ const out={...a}; for(const k in b){ if(!(k in out)) out[k]=b[k]; else if(typeof out[k]==='object' && out[k] && !Array.isArray(out[k])) out[k]=deepMerge(out[k], b[k]); } return out; }
   function load(){
     try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw){ return JSON.parse(JSON.stringify(DEFAULTS)); }
-      const obj = JSON.parse(raw);
-      // merge defaults
-      function deepMerge(a,b){
-        const out = {...a};
-        for(const k in b){
-          if(!(k in out)) out[k]=b[k];
-          else if(typeof out[k]==='object' && out[k] && !Array.isArray(out[k])) out[k]=deepMerge(out[k], b[k]);
-        }
-        return out;
-      }
-      return deepMerge(obj, DEFAULTS);
-    }catch(e){
-      console.error('load', e);
-      return JSON.parse(JSON.stringify(DEFAULTS));
-    }
+      const raw=localStorage.getItem(STORAGE_KEY);
+      if(!raw) return JSON.parse(JSON.stringify(DEFAULTS));
+      return deepMerge(JSON.parse(raw), DEFAULTS);
+    }catch(e){ return JSON.parse(JSON.stringify(DEFAULTS)); }
   }
-  function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); renderAll(); }
-  function fmt(n){
-    if(n===null||n===undefined||isNaN(n)) return '—';
-    return (state.currency||'₹') + ' ' + Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+  function save(opts={rerender:false}){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if(opts.rerender) renderAll();
   }
-  function f2(n){
-    if(n===null||n===undefined||isNaN(n)) return '—';
-    return Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
-  }
+  function fmt(n){ if(n==null || isNaN(n)) return '—'; return (state.currency||'₹')+' '+Number(n).toLocaleString(undefined,{maximumFractionDigits:2}); }
+  function f2(n){ if(n==null || isNaN(n)) return '—'; return Number(n).toLocaleString(undefined,{maximumFractionDigits:2}); }
   function uid(){ return Math.random().toString(36).slice(2)+Date.now().toString(36); }
 
-  // -------- Nav --------
+  // ---------- Tabs ----------
   const tabs = [
     {id:'dashboard', label:'Dashboard'},
     {id:'data', label:'Data'},
@@ -426,22 +414,20 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     {id:'help', label:'Help'}
   ];
   const tabEl = document.getElementById('tabs');
-  tabs.forEach(t=>{
-    const b=document.createElement('button'); b.textContent=t.label; b.onclick=()=>go(t.id); b.id='tab-'+t.id;
-    tabEl.appendChild(b);
-  });
+  tabs.forEach(t=>{ const b=document.createElement('button'); b.textContent=t.label; b.onclick=()=>go(t.id); b.id='tab-'+t.id; tabEl.appendChild(b); });
   window.go = function(id){
+    activeTabId = id;
     document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
     document.getElementById('tab-'+id).classList.add('active');
     if(id==='scanner'){ setTimeout(()=>resizeChart(),0); }
-  }
+  };
 
-  // -------- Checklist --------
+  // ---------- Checklist ----------
   function renderChecklist(){
-    const cont = document.getElementById('today-checklist');
-    cont.innerHTML='';
+    const tcont = document.getElementById('today-checklist');
+    tcont.innerHTML='';
     state.checklist.forEach(item=>{
       const wrap=document.createElement('div'); wrap.className='card'; wrap.style.margin='0';
       wrap.innerHTML=`<div class="flex"><div>${item.text}</div>
@@ -450,35 +436,19 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
           <input type="checkbox" id="tod-${item.id}" ${item.checked?'checked':''}>
           <span class="slider"></span>
         </label></div></div>`;
-      cont.appendChild(wrap);
+      tcont.appendChild(wrap);
     });
-    const cont2 = document.getElementById('checklist');
-    if(cont2){
-      cont2.innerHTML='';
-      state.checklist.forEach(item=>{
-        const wrap=document.createElement('div'); wrap.className='card'; wrap.style.margin='0';
-        wrap.innerHTML=`<div class="flex"><div><b>${item.text}</b></div>
-          <div class="right">
-            <label class="switch"><input type="checkbox" id="cl-${item.id}" ${item.checked?'checked':''}><span class="slider"></span></label>
-          </div></div>`;
-        cont2.appendChild(wrap);
-      });
-    }
   }
   window.saveChecklist = function(){
-    const next = state.checklist.map(item=>{
-      const el = document.getElementById('cl-'+item.id) || document.getElementById('tod-'+item.id);
+    state.checklist = state.checklist.map(item=>{
+      const el = document.getElementById('tod-'+item.id);
       return {...item, checked: !!(el && el.checked)};
     });
-    state.checklist = next;
     save();
   }
-  window.resetChecklist = function(){
-    state.checklist = JSON.parse(JSON.stringify(DEFAULTS.checklist));
-    save();
-  }
+  window.resetChecklist = function(){ state.checklist = JSON.parse(JSON.stringify(DEFAULTS.checklist)); save({rerender:true}); }
 
-  // -------- Settings & KPIs --------
+  // ---------- Settings & KPIs ----------
   const sEls = {
     capital: document.getElementById('s-capital'),
     riskpct: document.getElementById('s-riskpct'),
@@ -488,12 +458,11 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     maxopen: document.getElementById('s-maxopen')
   };
   function renderSettings(){
-    if(!sEls.capital) return;
     sEls.capital.value = state.capital;
     sEls.riskpct.value = state.riskPct;
-    sEls.fees.value = state.feesPct;
-    sEls.slip.value = state.slipPct;
-    sEls.curr.value = state.currency || '₹';
+    sEls.fees.value    = state.feesPct;
+    sEls.slip.value    = state.slipPct;
+    sEls.curr.value    = state.currency || '₹';
     sEls.maxopen.value = state.maxOpen;
   }
   window.saveSettings = function(){
@@ -501,57 +470,46 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     state.riskPct = +sEls.riskpct.value||0;
     state.feesPct = +sEls.fees.value||0;
     state.slipPct = +sEls.slip.value||0;
-    state.currency = sEls.curr.value||'₹';
+    state.currency= sEls.curr.value||'₹';
     state.maxOpen = parseInt(sEls.maxopen.value||'3',10);
-    save();
-    alert('Saved.');
+    save(); alert('Saved.');
   }
-  window.resetSettings = function(){
-    state.capital = DEFAULTS.capital;
-    state.riskPct = DEFAULTS.riskPct;
-    state.feesPct = DEFAULTS.feesPct;
-    state.slipPct = DEFAULTS.slipPct;
-    state.currency = DEFAULTS.currency;
-    state.maxOpen = DEFAULTS.maxOpen;
-    save();
-  }
+  window.resetSettings = function(){ Object.assign(state, {...state, ...DEFAULTS, trades: state.trades}); save({rerender:true}); }
 
   function renderKPIs(){
     const closed = state.trades.filter(t=>t.status==='CLOSED');
-    const open = state.trades.filter(t=>t.status==='OPEN');
+    const open   = state.trades.filter(t=>t.status==='OPEN');
     document.getElementById('kpi-capital').textContent = fmt(state.capital);
-    document.getElementById('kpi-risk').textContent = f2(state.riskPct)+' %';
-    document.getElementById('kpi-open').textContent = open.length;
-    document.getElementById('kpi-curr').textContent = state.currency||'₹';
+    document.getElementById('kpi-risk').textContent    = f2(state.riskPct)+' %';
+    document.getElementById('kpi-open').textContent    = open.length;
+    document.getElementById('kpi-curr').textContent    = state.currency||'₹';
 
     let wins=0, losses=0, pnl=0, rWins=[], rLosses=[];
-    let equity=[0];
+    const equity=[0];
     closed.forEach(t=>{
       pnl += (t.pnl||0);
       if((t.pnl||0)>=0){ wins++; rWins.push(t.rMultiple||0);} else { losses++; rLosses.push(t.rMultiple||0); }
       equity.push(pnl);
     });
-    const total=wins+losses;
-    const winrate = total? (wins/total*100):0;
+    const total=wins+losses; const winrate = total? (wins/total*100):0;
     document.getElementById('kpi-winrate').textContent = f2(winrate)+' %';
-    document.getElementById('kpi-pnl').textContent = fmt(pnl);
-
+    document.getElementById('kpi-pnl').textContent     = fmt(pnl);
     function maxDrawdown(arr){ let max=arr[0], dd=0; for(let i=1;i<arr.length;i++){ if(arr[i]>max) max=arr[i]; dd = Math.min(dd, arr[i]-max);} return Math.abs(dd); }
     document.getElementById('kpi-dd').textContent = fmt(maxDrawdown(equity));
     const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
-    const avgWin=avg(rWins), avgLoss=Math.abs(avg(rLosses));
-    const expR = avgWin*(winrate/100) - avgLoss*(1-winrate/100);
+    const expR = Math.abs(avg(rWins))*(winrate/100) - Math.abs(avg(rLosses))*(1-winrate/100);
     document.getElementById('kpi-exp').textContent = f2(expR);
   }
 
-  // -------- Journal --------
+  // ---------- Journal ----------
   function renderTrades(){
     const open = state.trades.filter(t=>t.status==='OPEN').sort((a,b)=>b.openTs-a.openTs);
     const closed = state.trades.filter(t=>t.status==='CLOSED').sort((a,b)=>b.closeTs-a.closeTs);
+
     const openWrap = document.getElementById('open-trades');
     const closedWrap = document.getElementById('closed-trades');
-    if(!openWrap||!closedWrap) return;
 
+    // Open
     const ot = document.createElement('table');
     ot.innerHTML = `<thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Stop</th><th>Qty</th><th>R (init)</th><th>Opened</th><th></th></tr></thead>`;
     const ob = document.createElement('tbody');
@@ -565,6 +523,7 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     openWrap.innerHTML=''; openWrap.appendChild(ot);
     if(open.length===0){ openWrap.innerHTML='<small class="muted">No open positions.</small>'; }
 
+    // Closed
     const ct = document.createElement('table');
     ct.innerHTML = `<thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Qty</th><th>P&amp;L</th><th>R</th><th>Closed</th></tr></thead>`;
     const cb = document.createElement('tbody');
@@ -583,8 +542,8 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     const symbol = document.getElementById('t-symbol').value.trim().toUpperCase();
     const direction = document.getElementById('t-dir').value;
     const entry = +document.getElementById('t-entry').value;
-    const stop = +document.getElementById('t-stop').value;
-    const target = +document.getElementById('t-target').value || null;
+    const stop  = +document.getElementById('t-stop').value;
+    const target= +document.getElementById('t-target').value || null;
     let qty = parseInt(document.getElementById('t-qty').value||'0',10);
     const notes = document.getElementById('t-notes').value.trim();
     if(!symbol || !isFinite(entry) || !isFinite(stop)){ alert('Symbol, entry and stop are required.'); return; }
@@ -595,9 +554,9 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     }
     const trade = { id: uid(), symbol, direction, entry, stop, target, qty, notes, openTs: Date.now(), status:'OPEN' };
     state.trades.push(trade);
-    save();
+    save({rerender:true});
     ['t-symbol','t-entry','t-stop','t-target','t-qty','t-notes'].forEach(id=>document.getElementById(id).value='');
-    alert('Position added.');
+    alert('Trade added.');
   }
   window.closeTradePrompt = function(id){
     const t = state.trades.find(x=>x.id===id);
@@ -611,17 +570,13 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     const fees = (t.entry * t.qty + exit * t.qty) * (state.feesPct/100);
     const slip = (t.entry + exit) * (state.slipPct/100) * t.qty;
     pnl -= (fees + slip);
-    t.exit = exit;
-    t.pnl = pnl;
+    t.exit = exit; t.pnl = pnl;
     t.rMultiple = riskPer>0 ? ( (t.direction==='LONG' ? (exit - t.entry) : (t.entry - exit)) / riskPer ) : 0;
-    t.status = 'CLOSED';
-    t.closeTs = Date.now();
-    save();
+    t.status = 'CLOSED'; t.closeTs = Date.now();
+    save({rerender:true});
   }
-
-  // Position sizing
   function computePosition(entry, stop, target){
-    if(!isFinite(entry) || !isFinite(stop) || entry===stop){ return {ok:false}; }
+    if(!isFinite(entry) || !isFinite(stop) || entry===stop) return {ok:false};
     const riskAmt = state.capital * (state.riskPct/100);
     const riskPerShare = Math.abs(entry - stop);
     let qty = Math.floor(riskAmt / riskPerShare);
@@ -631,36 +586,29 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     const slip = entry * (state.slipPct/100) * qty;
     const beMove = (fees + slip) / qty;
     let rrText = '—';
-    if(isFinite(target)){
-      const rewardPer = Math.abs(target - entry);
-      const rr = rewardPer / riskPerShare;
-      rrText = rr.toFixed(2)+' R';
-    }
+    if(isFinite(target)){ const rewardPer = Math.abs(target - entry); const rr = rewardPer / riskPerShare; rrText = rr.toFixed(2)+' R'; }
     return {ok:true, riskAmt, riskPerShare, qty, exposure, fees, slip, beMove, rrText};
   }
 
-  // -------- Analyzer --------
+  // ---------- Analyzer ----------
   function parseCSV(text){
     const lines = text.trim().split(/\r?\n/).filter(x=>x.trim().length>0);
     if(lines.length<2) return [];
     const head = lines[0].split(',').map(x=>x.trim().toLowerCase());
     const idx = {
-      date: head.findIndex(h=>/date/i.test(h)),
-      open: head.findIndex(h=>/open/i.test(h)),
-      high: head.findIndex(h=>/high/i.test(h)),
-      low:  head.findIndex(h=>/low/i.test(h)),
-      close:head.findIndex(h=>/close/i.test(h)),
-      volume:head.findIndex(h=>/vol/i.test(h))
+      date: head.findIndex(h=>/date/.test(h)),
+      open: head.findIndex(h=>/open/.test(h)),
+      high: head.findIndex(h=>/high/.test(h)),
+      low:  head.findIndex(h=>/low/.test(h)),
+      close:head.findIndex(h=>/close/.test(h)),
+      volume:head.findIndex(h=>/vol/.test(h))
     };
-    const data = [];
+    const data=[];
     for(let i=1;i<lines.length;i++){
       const cols = lines[i].split(',').map(x=>x.trim());
       const item = {
         date: idx.date>=0 ? cols[idx.date] : (i+''),
-        open: +cols[idx.open],
-        high: +cols[idx.high],
-        low:  +cols[idx.low],
-        close:+cols[idx.close],
+        open:+cols[idx.open], high:+cols[idx.high], low:+cols[idx.low], close:+cols[idx.close],
         volume: idx.volume>=0 ? +cols[idx.volume] : 0
       };
       if([item.open,item.high,item.low,item.close].every(v=>isFinite(v))) data.push(item);
@@ -670,43 +618,15 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
   }
   function sma(arr, period){
     const out=[]; let sum=0;
-    for(let i=0;i<arr.length;i++){
-      sum += arr[i];
-      if(i>=period) sum -= arr[i-period];
-      out.push(i>=period-1 ? sum/period : NaN);
-    }
+    for(let i=0;i<arr.length;i++){ sum+=arr[i]; if(i>=period) sum-=arr[i-period]; out.push(i>=period-1? sum/period : NaN); }
     return out;
   }
   function atr14(data){
-    const trs = data.map((d,i)=>{
-      const prev = i>0 ? data[i-1] : d;
-      const tr = Math.max(d.high - d.low, Math.abs(d.high - prev.close), Math.abs(d.low - prev.close));
-      return tr;
-    });
-    return sma(trs, 14);
+    const trs = data.map((d,i)=>{ const prev=i>0?data[i-1]:d; const tr = Math.max(d.high-d.low, Math.abs(d.high-prev.close), Math.abs(d.low-prev.close)); return tr; });
+    return sma(trs,14);
   }
-  function rollingMax(arr, period, accessor){
-    const out=[]; let dq=[];
-    for(let i=0;i<arr.length;i++){
-      const val = accessor(arr[i]);
-      while(dq.length && dq[dq.length-1].val <= val) dq.pop();
-      dq.push({i,val});
-      while(dq.length && dq[0].i <= i-period) dq.shift();
-      out.push(dq[0].val);
-    }
-    return out;
-  }
-  function rollingMin(arr, period, accessor){
-    const out=[]; let dq=[];
-    for(let i=0;i<arr.length;i++){
-      const val = accessor(arr[i]);
-      while(dq.length && dq[dq.length-1].val >= val) dq.pop();
-      dq.push({i,val});
-      while(dq.length && dq[0].i <= i-period) dq.shift();
-      out.push(dq[0].val);
-    }
-    return out;
-  }
+  function rollingMax(arr, p, acc){ const out=[]; let dq=[]; for(let i=0;i<arr.length;i++){ const v=acc(arr[i]); while(dq.length && dq[dq.length-1].v<=v) dq.pop(); dq.push({i,v}); while(dq.length && dq[0].i<=i-p) dq.shift(); out.push(dq[0].v);} return out; }
+  function rollingMin(arr, p, acc){ const out=[]; let dq=[]; for(let i=0;i<arr.length;i++){ const v=acc(arr[i]); while(dq.length && dq[dq.length-1].v>=v) dq.pop(); dq.push({i,v}); while(dq.length && dq[0].i<=i-p) dq.shift(); out.push(dq[0].v);} return out; }
   function detectTrend(data){
     const closes = data.map(d=>d.close);
     const ma20 = sma(closes,20);
@@ -720,93 +640,63 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
   function analyze(data, meta){
     if(data.length<25) return {ok:false, msg:'Need at least 25 rows of data.'};
     const n = data.length-1;
-    const vols  = data.map(d=>d.volume||0);
+    const vols = data.map(d=>d.volume||0);
     const atr = atr14(data);
-    const maVol = sma(vols, 20);
-    const max20 = rollingMax(data, 20, d=>d.high);
-    const min20 = rollingMin(data, 20, d=>d.low);
-    const prevHigh20 = max20[n-1];
-    const prevLow20  = min20[n-1];
+    const maVol = sma(vols,20);
+    const prevHigh20 = rollingMax(data,20,d=>d.high)[n-1];
+    const prevLow20  = rollingMin(data,20,d=>d.low)[n-1];
     const breakoutUp = data[n].close > prevHigh20;
     const breakoutDn = data[n].close < prevLow20;
-    const volExp = isFinite(maVol[n]) ? vols[n] > 1.5 * maVol[n] : false;
-    const atrVal = atr[n];
+    const volExp = isFinite(maVol[n]) ? vols[n] > 1.5*maVol[n] : false;
     const trend = detectTrend(data);
 
-    // crude retest heuristic
-    let retest=false;
-    for(let i=Math.max(0,n-3); i<=n; i++){
-      if(breakoutUp && Math.abs(data[i].low - prevHigh20) <= (0.2*(atr[i]||atrVal||0))) retest = true;
-      if(breakoutDn && Math.abs(data[i].high - prevLow20)  <= (0.2*(atr[i]||atrVal||0))) retest = true;
-    }
-
-    // Render
-    const box = document.getElementById('scan-results');
-    const out = document.getElementById('signals');
-    const metaEl = document.getElementById('meta-sym');
-    const bullets = [];
+    const bullets=[];
     bullets.push(`<div class="summary">Trend: ${trend}</div>`);
-    if(breakoutUp)  bullets.push(`✅ <b>Upside breakout</b> above prior 20‑bar high (${f2(prevHigh20)}).`);
-    if(breakoutDn)  bullets.push(`✅ <b>Downside breakout</b> below prior 20‑bar low (${f2(prevLow20)}).`);
+    if(breakoutUp) bullets.push(`✅ <b>Upside breakout</b> above prior 20‑bar high (${f2(prevHigh20)}).`);
+    if(breakoutDn) bullets.push(`✅ <b>Downside breakout</b> below prior 20‑bar low (${f2(prevLow20)}).`);
     if(!breakoutUp && !breakoutDn) bullets.push('ℹ️ No 20‑bar breakout on the latest bar.');
-    bullets.push(`ATR(14): <b>${f2(atrVal)}</b>`);
+    bullets.push(`ATR(14): <b>${f2(atr[n])}</b>`);
     bullets.push(`Volume Expansion: <b>${volExp ? 'Yes (≥1.5× avg)' : 'No'}</b>`);
+
+    const out = document.getElementById('signals');
     out.innerHTML = '<ul><li>'+bullets.join('</li><li>')+'</li></ul>';
-    metaEl.textContent = meta || '';
-    box.style.display='block';
-    resizeChart();
-    drawChart(data);
+    const metaEl = document.getElementById('meta-sym'); metaEl.textContent = meta||'';
+
+    document.getElementById('scan-results').style.display='block';
+    resizeChart(); drawChart(data);
     return {ok:true};
   }
   function analyzeCSV(){ const data = parseCSV(document.getElementById('csv-input').value); const res = analyze(data); if(!res.ok){ alert(res.msg); } }
   window.analyzeCSV = analyzeCSV;
   window.clearCSV = function(){ document.getElementById('csv-input').value=''; document.getElementById('scan-results').style.display='none'; }
 
-  // Chart
+  // ---------- Chart ----------
   let chartCanvas = document.getElementById('chart');
-  function resizeChart(){
-    if(!chartCanvas) chartCanvas = document.getElementById('chart');
-    if(!chartCanvas) return;
-    const dpr = window.devicePixelRatio||1;
-    const w = chartCanvas.clientWidth;
-    const h = chartCanvas.clientHeight;
-    chartCanvas.width = Math.floor(w*dpr);
-    chartCanvas.height= Math.floor(h*dpr);
-    const ctx = chartCanvas.getContext('2d');
-    ctx.scale(dpr, dpr);
+  function resizeChart(){ if(!chartCanvas) chartCanvas=document.getElementById('chart'); if(!chartCanvas) return;
+    const dpr=window.devicePixelRatio||1; const w=chartCanvas.clientWidth; const h=chartCanvas.clientHeight;
+    chartCanvas.width=Math.floor(w*dpr); chartCanvas.height=Math.floor(h*dpr); const ctx=chartCanvas.getContext('2d'); ctx.scale(dpr,dpr);
   }
   function drawChart(data){
     if(!chartCanvas) return;
-    const ctx = chartCanvas.getContext('2d');
-    const W = chartCanvas.clientWidth;
-    const H = chartCanvas.clientHeight;
+    const ctx=chartCanvas.getContext('2d'); const W=chartCanvas.clientWidth; const H=chartCanvas.clientHeight;
     ctx.clearRect(0,0,W,H);
-    const view = data.slice(-100);
-    const highs = view.map(d=>d.high), lows=view.map(d=>d.low);
-    const maxH = Math.max(...highs), minL = Math.min(...lows);
-    const pad = 8;
-    const y = v => pad + (H-2*pad) * (1 - (v - minL)/(maxH - minL || 1));
-    const xStep = (W-2*pad) / (view.length);
-    // grid
-    ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 1;
-    for(let i=0;i<5;i++){ const yy = pad + (H-2*pad) * i/4; ctx.beginPath(); ctx.moveTo(pad, yy); ctx.lineTo(W-pad, yy); ctx.stroke(); }
-    // candles
+    const view=data.slice(-100);
+    const highs=view.map(d=>d.high), lows=view.map(d=>d.low);
+    const maxH=Math.max(...highs), minL=Math.min(...lows);
+    const pad=8; const y=v=>pad+(H-2*pad)*(1-(v-minL)/(maxH-minL||1)); const xStep=(W-2*pad)/view.length;
+    ctx.strokeStyle='#1f2937'; ctx.lineWidth=1;
+    for(let i=0;i<5;i++){ const yy=pad+(H-2*pad)*i/4; ctx.beginPath(); ctx.moveTo(pad,yy); ctx.lineTo(W-pad,yy); ctx.stroke(); }
     for(let i=0;i<view.length;i++){
-      const d=view[i];
-      const x = pad + i*xStep + xStep*0.5;
-      const up = d.close>=d.open;
-      ctx.strokeStyle = up ? '#10b981' : '#ef4444';
-      ctx.fillStyle   = up ? '#10b981' : '#ef4444';
-      ctx.beginPath(); ctx.moveTo(x, y(d.high)); ctx.lineTo(x, y(d.low)); ctx.stroke(); // wick
-      const bw = Math.max(2, xStep*0.6);
-      const top = y(Math.max(d.open,d.close)); const bot = y(Math.min(d.open,d.close));
-      const h = Math.max(1, bot-top);
+      const d=view[i]; const x=pad+i*xStep+xStep*0.5; const up=d.close>=d.open;
+      ctx.strokeStyle=up?'#10b981':'#ef4444'; ctx.fillStyle=ctx.strokeStyle;
+      ctx.beginPath(); ctx.moveTo(x,y(d.high)); ctx.lineTo(x,y(d.low)); ctx.stroke();
+      const bw=Math.max(2,xStep*0.6); const top=y(Math.max(d.open,d.close)); const bot=y(Math.min(d.open,d.close)); const h=Math.max(1,bot-top);
       ctx.fillRect(x-bw/2, top, bw, h);
     }
   }
   window.addEventListener('resize', resizeChart);
 
-  // -------- Data Providers --------
+  // ---------- Data providers ----------
   const dEls = {
     provider: document.getElementById('d-provider'),
     exch: document.getElementById('d-exch'),
@@ -823,192 +713,169 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
 
   function renderDataSettings(){
     dEls.provider.value = state.data.provider;
-    dEls.exch.value = state.data.exch;
-    dEls.symbol.value = state.data.symbol;
+    dEls.exch.value     = state.data.exch;
+    dEls.symbol.value   = state.data.symbol;
     dEls.interval.value = state.data.interval;
-    dEls.range.value = state.data.range;
-    dEls.avkey.value = state.data.avKey;
-    dEls.autoref.checked = !!state.data.autoref;
+    dEls.range.value    = state.data.range;
+    dEls.avkey.value    = state.data.avKey;
+    dEls.autoref.checked= !!state.data.autoref;
     dEls.autorefMin.value = state.data.autorefMin;
     renderWatch();
   }
   function saveDataSettings(){
     state.data.provider = dEls.provider.value;
-    state.data.exch = dEls.exch.value;
-    state.data.symbol = dEls.symbol.value.trim().toUpperCase();
+    state.data.exch     = dEls.exch.value;
+    state.data.symbol   = dEls.symbol.value.trim().toUpperCase();
     state.data.interval = dEls.interval.value;
-    state.data.range = dEls.range.value;
-    state.data.avKey = dEls.avkey.value.trim();
-    state.data.autoref = !!dEls.autoref.checked;
+    state.data.range    = dEls.range.value;
+    state.data.avKey    = dEls.avkey.value.trim();
+    state.data.autoref  = !!dEls.autoref.checked;
     state.data.autorefMin = parseInt(dEls.autorefMin.value||'5',10);
-    save();
+    // Persist WITHOUT re-render (prevents tab jump/focus loss)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    // update only watchlist table if needed
+    if(typeof renderWatch==='function') renderWatch();
   }
+  // Persist settings on "change" only (typing won't re-render)
+  ['d-provider','d-exch','d-symbol','d-interval','d-range','d-avkey','d-autoref','d-autoref-min']
+    .forEach(id => { const el=document.getElementById(id); if(!el) return; el.addEventListener('change', saveDataSettings); });
+  // QoL: Enter in Symbol triggers fetch, no re-render
+  dEls.symbol.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ fetchAndAnalyze(); } });
 
   const YF = {
-    mapInterval(iv){ return iv; }, // 1d | 60m | 15m
-    normalizeSymbol(sym, exch){ // if no suffix, add
-      if(/\.[A-Za-z]+$/.test(sym)) return sym;
-      const suf = exch==='BO' ? '.BO' : '.NS';
-      return sym + suf;
-    },
+    normalizeSymbol(sym, exch){ if(/\.[A-Za-z]+$/.test(sym)) return sym; return sym + (exch==='BO'?'.BO':'.NS'); },
     async fetch(sym, iv, range){
       const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=${encodeURIComponent(iv)}&range=${encodeURIComponent(range)}&events=div%2Csplit`;
       const res = await fetch(url, {mode:'cors'});
-      if(!res.ok) throw new Error('YF HTTP '+res.status);
+      if(!res.ok) throw new Error('Yahoo HTTP '+res.status);
       const j = await res.json();
-      if(!j || !j.chart || j.chart.error) throw new Error('YF error: '+(j.chart?.error?.description||'unknown'));
-      const r = j.chart.result && j.chart.result[0];
-      if(!r || !r.timestamp || !r.indicators || !r.indicators.quote || !r.indicators.quote[0]) throw new Error('YF structure unexpected');
+      const r = j?.chart?.result?.[0];
+      if(!r || !r.timestamp || !r.indicators?.quote?.[0]) throw new Error('Yahoo response unexpected');
       const q = r.indicators.quote[0];
-      const out = [];
+      const out=[];
       for(let i=0;i<r.timestamp.length;i++){
-        const t = r.timestamp[i]*1000;
-        const o = q.open[i], h=q.high[i], l=q.low[i], c=q.close[i], v=q.volume[i];
+        const o=q.open[i], h=q.high[i], l=q.low[i], c=q.close[i], v=q.volume[i];
         if([o,h,l,c].some(x=>!isFinite(x))) continue;
-        out.push({date:new Date(t).toISOString(), open:o, high:h, low:l, close:c, volume: v||0});
+        out.push({date:new Date(r.timestamp[i]*1000).toISOString(), open:o, high:h, low:l, close:c, volume:v||0});
       }
       return out;
     }
   };
-
   const AV = {
-    normalizeSymbol(sym, exch){
-      if(/\.[A-Za-z]+$/.test(sym)) return sym;
-      const suf = exch==='BO' ? '.BO' : '.NS';
-      return sym + suf;
-    },
+    normalizeSymbol(sym, exch){ if(/\.[A-Za-z]+$/.test(sym)) return sym; return sym + (exch==='BO'?'.BO':'.NS'); },
+    mapIv(iv){ return iv==='1d'?'':(iv==='60m'?'60min':iv==='15m'?'15min':iv); },
     async fetchDaily(sym, size, key){
       const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${encodeURIComponent(sym)}&outputsize=${encodeURIComponent(size)}&apikey=${encodeURIComponent(key)}`;
-      const res = await fetch(url, {mode:'cors'});
-      const j = await res.json();
+      const res = await fetch(url, {mode:'cors'}); const j=await res.json();
       if(j['Note']||j['Information']) throw new Error(j['Note']||j['Information']);
       if(j['Error Message']) throw new Error(j['Error Message']);
-      const series = j['Time Series (Daily)'] || j['Time Series (Daily)'] || j['Time Series (Daily)'];
-      if(!series) throw new Error('AV daily: missing series');
+      const series = j['Time Series (Daily)']; if(!series) throw new Error('AV daily: missing series');
       const out = Object.keys(series).map(d=>{
-        const row = series[d];
-        return {date: new Date(d).toISOString(), open:+row['1. open'], high:+row['2. high'], low:+row['3. low'], close:+row['4. close'], volume:+row['6. volume']||+row['5. volume']||0};
+        const row=series[d]; return {date:new Date(d).toISOString(), open:+row['1. open'], high:+row['2. high'], low:+row['3. low'], close:+row['4. close'], volume:+row['6. volume']||+row['5. volume']||0};
       }).filter(x=>[x.open,x.high,x.low,x.close].every(v=>isFinite(v))).sort((a,b)=>new Date(a.date)-new Date(b.date));
       return out;
     },
     async fetchIntraday(sym, iv, size, key){
-      const url = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${encodeURIComponent(sym)}&interval=${encodeURIComponent(iv)}&outputsize=${encodeURIComponent(size)}&adjusted=true&apikey=${encodeURIComponent(key)}`;
-      const res = await fetch(url, {mode:'cors'});
-      const j = await res.json();
+      const avIv = (iv==='60m'?'60min':iv==='15m'?'15min':iv);
+      const url = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${encodeURIComponent(sym)}&interval=${encodeURIComponent(avIv)}&outputsize=${encodeURIComponent(size)}&adjusted=true&apikey=${encodeURIComponent(key)}`;
+      const res = await fetch(url, {mode:'cors'}); const j=await res.json();
       if(j['Note']||j['Information']) throw new Error(j['Note']||j['Information']);
       if(j['Error Message']) throw new Error(j['Error Message']);
-      const keyName = `Time Series (${iv})`;
-      const series = j[keyName];
+      const keyName = `Time Series (${avIv})`; const series = j[keyName];
       if(!series) throw new Error('AV intraday: missing series');
       const out = Object.keys(series).map(d=>{
-        const row = series[d];
-        return {date: new Date(d.replace(' ', 'T')+'Z').toISOString(), open:+row['1. open'], high:+row['2. high'], low:+row['3. low'], close:+row['4. close'], volume:+row['5. volume']||0};
+        const row=series[d]; return {date:new Date(d.replace(' ','T')+'Z').toISOString(), open:+row['1. open'], high:+row['2. high'], low:+row['3. low'], close:+row['4. close'], volume:+row['5. volume']||0};
       }).filter(x=>[x.open,x.high,x.low,x.close].every(v=>isFinite(v))).sort((a,b)=>new Date(a.date)-new Date(b.date));
       return out;
     }
   };
 
-  function showFetchState(txt, spinning){
-    dEls.fetchState.innerHTML = '';
-    if(spinning){ const s=document.createElement('div'); s.className='spinner'; dEls.fetchState.appendChild(s); }
-    const t=document.createElement('div'); t.textContent = txt; dEls.fetchState.appendChild(t);
-  }
-
   function ttlFor(iv){ return iv==='1d' ? 6*60*60*1000 : 10*60*1000; } // cache TTL: 6h daily; 10m intraday
   function cacheKey(sym, iv, provider, range){ return [sym,iv,provider,range].join('|'); }
   function getCache(key){ const c=state.data.cache[key]; if(!c) return null; if(Date.now()-c.ts > (c.ttl||0)) return null; return c.data; }
-  function setCache(key, data, ttl){ state.data.cache[key] = {ts:Date.now(), data, ttl}; save(); }
+  function setCache(key,data,ttl){ state.data.cache[key]={ts:Date.now(),data,ttl}; save(); }
 
-  function normalizeSymbolInput(raw, exch){ raw = raw.trim().toUpperCase(); if(!raw) return raw;
-    if(/\.[A-Za-z]+$/.test(raw)) return raw; // already has suffix
-    const suf = exch==='BO' ? '.BO' : '.NS';
-    return raw + suf;
+  function normalizeSymbolInput(raw, exch){
+    raw = raw.trim().toUpperCase(); if(!raw) return raw;
+    if(/\.[A-Za-z]+$/.test(raw)) return raw; // already has .NS/.BO
+    return raw + (exch==='BO'?'.BO':'.NS');
+  }
+
+  function showFetchState(txt, spinning=false){
+    dEls.fetchState.innerHTML=''; if(spinning){ const s=document.createElement('div'); s.className='spinner'; dEls.fetchState.appendChild(s); }
+    const t=document.createElement('div'); t.textContent = txt; dEls.fetchState.appendChild(t);
   }
 
   async function fetchAuto(sym, iv, range, key){
-    // Try Yahoo first (CORS permitting), then Alpha Vantage if key present
     try{
       showFetchState('Yahoo Finance…', true);
       const data = await YF.fetch(sym, iv, range);
       return {provider:'YF', data};
     }catch(e){
-      console.warn('Yahoo failed', e);
       if(!key) throw new Error('Yahoo failed and no Alpha Vantage key configured.');
       showFetchState('Alpha Vantage…', true);
-      if(iv==='1d'){
-        const data = await AV.fetchDaily(sym, (range==='full'?'full':'compact'), key);
-        return {provider:'AV', data};
-      }else{
-        const data = await AV.fetchIntraday(sym, iv, (range==='full'?'full':'compact'), key);
-        return {provider:'AV', data};
-      }
+      if(iv==='1d'){ const data = await AV.fetchDaily(sym, (range==='full'?'full':'compact'), key); return {provider:'AV', data}; }
+      const data = await AV.fetchIntraday(sym, iv, (range==='full'?'full':'compact'), key); return {provider:'AV', data};
     }
   }
-
   async function fetchFromProvider(p, sym, iv, range, key){
     if(p==='AUTO') return fetchAuto(sym, iv, range, key);
-    if(p==='YF'){
-      const data = await YF.fetch(sym, iv, range);
-      return {provider:'YF', data};
-    }
+    if(p==='YF'){ const data = await YF.fetch(sym, iv, range); return {provider:'YF', data}; }
     if(p==='AV'){
       if(!key) throw new Error('Alpha Vantage key required.');
-      if(iv==='1d'){
-        const data = await AV.fetchDaily(sym, (range==='full'?'full':'compact'), key);
-        return {provider:'AV', data};
-      }else{
-        const data = await AV.fetchIntraday(sym, iv, (range==='full'?'full':'compact'), key);
-        return {provider:'AV', data};
-      }
+      if(iv==='1d'){ const data=await AV.fetchDaily(sym, (range==='full'?'full':'compact'), key); return {provider:'AV', data}; }
+      const data=await AV.fetchIntraday(sym, iv, (range==='full'?'full':'compact'), key); return {provider:'AV', data};
     }
     throw new Error('Unknown provider');
   }
 
-  let autorefTimer = null;
+  let autorefTimer=null;
   window.fetchAndAnalyze = async function(){
     try{
       saveDataSettings();
-      const exch = state.data.exch;
-      const rawSym = state.data.symbol;
-      const sym = normalizeSymbolInput(rawSym, exch);
-      const iv = state.data.interval; // 1d, 60m, 15m
-      const range = state.data.range;
-      const provider = state.data.provider;
-      const key = state.data.avKey;
-      const ckey = cacheKey(sym, iv, provider, range);
-      const cached = getCache(ckey);
-      if(cached){
-        showFetchState('Using cached data', false);
-        analyze(cached, `${sym} • ${iv} • ${provider}`);
-      }else{
-        showFetchState('Fetching…', true);
-        const {provider:used, data} = await fetchFromProvider(provider, sym, iv, range, key);
-        setCache(ckey, data, ttlFor(iv));
-        showFetchState(`Fetched via ${used}`, false);
-        analyze(data, `${sym} • ${iv} • ${used}`);
-        // also fill CSV box for transparency
-        const csv = 'Date,Open,High,Low,Close,Volume\n' + data.map(d=>[d.date,d.open,d.high,d.low,d.close,d.volume].join(',')).join('\n');
-        document.getElementById('csv-input').value = csv;
-        go('scanner');
-      }
+      const exch=state.data.exch; const rawSym=state.data.symbol; const sym=normalizeSymbolInput(rawSym,exch);
+      const iv=state.data.interval; const range=state.data.range; const provider=state.data.provider; const key=state.data.avKey;
+      const ckey=cacheKey(sym,iv,provider,range); const cached=getCache(ckey);
+      if(cached){ showFetchState('Using cached data'); analyze(cached, `${sym} • ${iv} • ${provider}`); go('scanner'); return; }
+      showFetchState('Fetching…', true);
+      const {provider:used,data}=await fetchFromProvider(provider,sym,iv,range,key);
+      setCache(ckey,data,ttlFor(iv));
+      showFetchState(`Fetched via ${used}`);
+      analyze(data, `${sym} • ${iv} • ${used}`);
+      // Fill CSV for transparency
+      const csv = 'Date,Open,High,Low,Close,Volume\n' + data.map(d=>[d.date,d.open,d.high,d.low,d.close,d.volume].join(',')).join('\n');
+      document.getElementById('csv-input').value = csv;
+      go('scanner');
     }catch(err){
-      console.error(err);
-      showFetchState('Error', false);
-      alert('Data fetch failed: '+err.message+'\n• If Yahoo is blocked by CORS, switch Provider to Alpha Vantage and add your API key.\n• Ensure symbol suffix (.NS or .BO) is correct.');
+      console.error(err); showFetchState('Error');
+      alert('Data fetch failed: '+err.message+'\n• If Yahoo is blocked by CORS, switch to Alpha Vantage and add your API key.\n• Ensure .NS/.BO suffix is correct.');
     }finally{
       // manage auto refresh
       clearInterval(autorefTimer);
-      if(state.data.autoref){
-        const ms = Math.max(1, state.data.autorefMin)*60*1000;
-        autorefTimer = setInterval(()=>fetchAndAnalyze(), ms);
-      }
+      if(state.data.autoref){ const ms=Math.max(1,state.data.autorefMin)*60*1000; autorefTimer=setInterval(()=>fetchAndAnalyze(), ms); }
     }
   };
 
-  // Watchlist
+  window.testProviders = async function(){
+    try{
+      showFetchState('Testing providers…', true);
+      const sym = normalizeSymbolInput('RELIANCE', dEls.exch.value);
+      // Test YF
+      let yfOK=false, avOK=false;
+      try{ await YF.fetch(sym,'1d','3mo'); yfOK=true; }catch(e){ yfOK=false; }
+      // Test AV (only if key present)
+      const key=(dEls.avkey.value||'').trim();
+      if(key){ try{ await AV.fetchDaily(sym,'compact',key); avOK=true; }catch(e){ avOK=false; } }
+      const msg = `Yahoo: ${yfOK?'OK ✅':'Blocked/Fail ❌'}  •  Alpha Vantage: ${key? (avOK?'OK ✅':'Fail ❌') : 'No key'}`;
+      showFetchState(msg);
+    }catch(e){
+      showFetchState('Test failed'); alert('Test failed: '+e.message);
+    }
+  };
+
+  // ---------- Watchlist ----------
   function renderWatch(){
-    const box = dEls.watchBox;
-    box.innerHTML='';
+    const box=dEls.watchBox; box.innerHTML='';
     if(!state.data.watch || state.data.watch.length===0){ box.innerHTML='<small class="muted">No symbols. Add some to watch.</small>'; return; }
     const t=document.createElement('table');
     t.innerHTML='<thead><tr><th></th><th>Symbol</th><th>Exchange</th><th></th></tr></thead>';
@@ -1022,86 +889,60 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
     t.appendChild(b); box.appendChild(t);
   }
   window.addWatch = function(){
-    const s = dEls.watchAdd.value.trim().toUpperCase();
-    if(!s) return;
-    state.data.watch.push({symbol:s, exch: state.data.exch});
-    dEls.watchAdd.value='';
-    save();
+    const s=dEls.watchAdd.value.trim().toUpperCase(); if(!s) return;
+    state.data.watch.push({symbol:s, exch: state.data.exch}); dEls.watchAdd.value=''; save(); renderWatch();
   }
-  window.delWatch = function(i){ state.data.watch.splice(i,1); save(); }
-  window.clearWatch = function(){ if(confirm('Clear entire watchlist?')){ state.data.watch=[]; save(); } }
-  window.fetchOneWatch = async function(i){
-    state.data.symbol = state.data.watch[i].symbol;
-    state.data.exch = state.data.watch[i].exch;
-    renderDataSettings();
-    await fetchAndAnalyze();
-  }
+  window.delWatch = function(i){ state.data.watch.splice(i,1); save(); renderWatch(); }
+  window.clearWatch = function(){ if(confirm('Clear entire watchlist?')){ state.data.watch=[]; save(); renderWatch(); } }
+  window.fetchOneWatch = async function(i){ state.data.symbol = state.data.watch[i].symbol; state.data.exch = state.data.watch[i].exch; renderDataSettings(); await fetchAndAnalyze(); }
   window.batchFetch = async function(){
     saveDataSettings();
-    const selectedIdx=[];
-    state.data.watch.forEach((w,i)=>{ const el=document.getElementById('wsel-'+i); if(el&&el.checked) selectedIdx.push(i); });
+    const selectedIdx=[]; state.data.watch.forEach((w,i)=>{ const el=document.getElementById('wsel-'+i); if(el&&el.checked) selectedIdx.push(i); });
     if(selectedIdx.length===0){ alert('Select at least one symbol.'); return; }
-    const delay = (ms)=>new Promise(r=>setTimeout(r,ms));
+    const delay=(ms)=>new Promise(r=>setTimeout(r,ms));
     for(let k=0;k<selectedIdx.length;k++){
       await window.fetchOneWatch(selectedIdx[k]);
-      // Respect Alpha Vantage rate limits (5/min). Wait 15s between each when using AV or AUTO with AV key.
-      const provider = state.data.provider;
-      const usingAV = (provider==='AV') || (provider==='AUTO' && state.data.avKey);
+      // Alpha Vantage free tier rate limits are commonly low; wait longer when AV is involved.
+      const provider=state.data.provider; const usingAV=(provider==='AV') || (provider==='AUTO' && state.data.avKey);
       await delay(usingAV ? 15000 : 3000);
     }
   }
 
-  // -------- Export / Import / Reset --------
+  // ---------- Export / Import / Reset ----------
   window.exportData = function(){
     const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href=url; a.download='pa_trader_equity_auto_backup.json'; a.click();
+    const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='pa_trader_equity_auto_backup.json'; a.click();
     setTimeout(()=>URL.revokeObjectURL(url), 1000);
   }
   document.getElementById('import-file').addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev)=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=(ev)=>{
       try{
-        const obj = JSON.parse(ev.target.result);
-        if(!obj || typeof obj!=='object'){ alert('Invalid file.'); return; }
-        if(!('trades' in obj) || !('capital' in obj)){ alert('Unexpected data.'); return; }
-        state = {...state, ...obj};
-        save();
-        alert('Import successful.');
+        const obj=JSON.parse(ev.target.result);
+        if(!obj || typeof obj!=='object') throw new Error('Invalid file');
+        if(!('trades' in obj) || !('capital' in obj)) throw new Error('Missing keys');
+        state = deepMerge(obj, DEFAULTS); save({rerender:true}); alert('Import successful.');
       }catch(err){ alert('Import failed: '+err.message); }
     };
     reader.readAsText(file);
   });
-  window.resetAll = function(){
-    if(confirm('This will erase all positions & settings. Continue?')){
-      state = JSON.parse(JSON.stringify(DEFAULTS));
-      save();
-      alert('All data cleared.');
-    }
-  }
+  window.resetAll = function(){ if(confirm('This will erase all positions & settings. Continue?')){ state = JSON.parse(JSON.stringify(DEFAULTS)); save({rerender:true}); alert('All data cleared.'); } }
 
-  // Initial render
+  // ---------- Initial render ----------
   function renderAll(){
+    // preserve current tab
     renderChecklist();
     renderSettings();
     renderTrades();
     renderKPIs();
     renderDataSettings();
-    go('dashboard');
+    go(activeTabId);
   }
+  // initial mount
   renderAll();
-
-  // Persist data settings on change
-  ['change','input'].forEach(ev=>{
-    ['d-provider','d-exch','d-symbol','d-interval','d-range','d-avkey','d-autoref','d-autoref-min'].forEach(id=>{
-      const el = document.getElementById(id);
-      if(el) el.addEventListener(ev, saveDataSettings);
-    });
-  });
-
-})();</script>
+  go('dashboard');
+})();
+</script>
 </body>
 </html>
