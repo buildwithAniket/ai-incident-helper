@@ -127,8 +127,8 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
         <div>
           <label>Provider</label>
           <select id="d-provider">
-            <option value="AUTO">AUTO (Yahoo → Alpha Vantage)</option>
-            <option value="YF">Yahoo Finance (no key)</option>
+            <option value="AUTO">AUTO (Yahoo via CORS → Alpha Vantage)</option>
+            <option value="YF">Yahoo Finance (via CORS)</option>
             <option value="AV">Alpha Vantage (API key)</option>
           </select>
         </div>
@@ -745,7 +745,9 @@ kbd{background:#0b1220;color:#e5e7eb;border:1px solid #263046;border-radius:6px;
   const YF = {
     normalizeSymbol(sym, exch){ if(/\.[A-Za-z]+$/.test(sym)) return sym; return sym + (exch==='BO'?'.BO':'.NS'); },
     async fetch(sym, iv, range){
-      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=${encodeURIComponent(iv)}&range=${encodeURIComponent(range)}&events=div%2Csplit`;
+      // Use AllOrigins proxy to bypass CORS
+      const base = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=${encodeURIComponent(iv)}&range=${encodeURIComponent(range)}&events=div%2Csplit`;
+      const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(base)}`;
       const res = await fetch(url, {mode:'cors'});
       if(!res.ok) throw new Error('Yahoo HTTP '+res.status);
       const j = await res.json();
